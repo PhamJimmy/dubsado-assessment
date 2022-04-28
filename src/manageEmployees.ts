@@ -11,7 +11,9 @@ class TreeNode {
  * @param {Object[]} employees array of employees
  * @returns {TreeNode}
  */
-function generateCompanyStructure() {}
+function generateCompanyStructure() {
+    
+}
 
 /**
  * Adds a new employee to the team and places them under a specified boss.
