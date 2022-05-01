@@ -60,13 +60,13 @@ export function generateNormalizedJSON() {
  * @param {TreeNode} tree
  * @param {Object} newEmployee
  * @param {string} bossName
- * @returns {string}
+ * @returns {void}
  */
 export function hireEmployee(tree: TreeNode, newEmployee: Employee, bossName: string) {
   const boss = getFutureBoss(tree, bossName);
   const employee = new TreeNode(newEmployee);
   boss.descendants.push(employee);
-  return `Added new employee (${employee.value.name}) with ${boss.value.name} as their boss`;
+  console.log(`[hireEmployee]: Added new employee (${employee.value.name}) with ${boss.value.name} as their boss`);
 }
 
 // https://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
@@ -134,7 +134,7 @@ export function fireEmployee(tree: TreeNode, name: string) {
     boss.descendants.findIndex((descendant) => descendant.value.name === name),
     1
   );
-  console.log(`Fired ${employee.value.name} and replaced with ${replacement.value.name}`);
+  console.log(`[fireEmployee]: Fired ${employee.value.name} and replaced with ${replacement.value.name}`);
 }
 
 /**
@@ -183,7 +183,7 @@ export function promoteEmployee(tree: TreeNode, employeeName: string) {
   superBoss.descendants[bossIndex] = employee;
 
   employee.descendants.push(boss);
-  console.log(`Promoted ${employee.value.name} and made ${boss.value.name} their subordinate`);
+  console.log(`[promoteEmployee]: Promoted ${employee.value.name} and made ${boss.value.name} their subordinate`);
 }
 
 /**
@@ -221,5 +221,5 @@ export function demoteEmployee(tree: TreeNode, employeeName: string, subordinate
 
   subordinate.descendants = employeeSubordinates;
   subordinate.descendants.push(employee);
-  console.log(`Demoted employee (demoted ${employee.value.name} and replaced with ${subordinate.value.name})`);
+  console.log(`[demoteEmployee]: Demoted employee (demoted ${employee.value.name} and replaced with ${subordinate.value.name})`);
 }

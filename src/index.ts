@@ -15,16 +15,16 @@ function main() {
 
   console.log("\n");
 
-  console.log(hireEmployee(tree, newEmployee, "Sarah"));
+  hireEmployee(tree, newEmployee, "Sarah");
   fireEmployee(tree, "Alicia");
   promoteEmployee(tree, "Jared");
   demoteEmployee(tree, "Xavier", "Maria");
 
   console.log("\n");
 
-  console.log(`Bill's boss is ${getBoss(tree, "Bill").value.name}`);
+  console.log(`[getBoss]: Bill's boss is ${getBoss(tree, "Bill").value.name}`);
   const subordinateNames = getSubordinates(tree, "Maria").map((subordinate) => subordinate.value.name);
-  console.log(`Maria's subordinates are ${subordinateNames.join(", ")}`)
+  console.log(`[getSubordinate]: Maria's subordinates are ${subordinateNames.join(", ")}`)
 }
 
 main()
