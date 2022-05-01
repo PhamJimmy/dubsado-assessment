@@ -2,7 +2,7 @@ import { TreeNode } from "./manageEmployees";
 
 // https://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
 /**
- * Helper function for hireEmployee to get employee node via recursion
+ * Helper function to get employee node via recursion
  * 
  * @param {TreeNode} treeNode
  * @param {string} bossName

@@ -134,7 +134,7 @@ export function fireEmployee(tree: TreeNode, name: string) {
     boss.descendants.findIndex((descendant) => descendant.value.name === name),
     1
   );
-  console.log(`Fired ${employee.value.name} and replaced with ${replacement.value.name}`)
+  console.log(`Fired ${employee.value.name} and replaced with ${replacement.value.name}`);
 }
 
 /**
@@ -143,14 +143,16 @@ export function fireEmployee(tree: TreeNode, name: string) {
  *
  * PSEUDOCODE
  * get promotedEmployee from tree
- * save boss's subordinates in variable
+ * boss removes promotedEmployee from subordinates
+ * save boss's subordinates via DEEP COPY
+ * promotedEmployee adds boss's subordinates
  * if promotedEmployee has subordinates:
  *  promotedEmployee subordinate must point to promotedEmployee's boss as new parent
  *  boss adds promotedEmployee subordinates to their own
  *  promotedEmployee deletes all subordinates
- * boss removes promotedEmployee from subordinates
- * promotedEmployee adds boss's ORIGINAL subordinates in variable
- * promotedEmployee adds boss as subordinate and vice versa
+ * promotedEmployee adds boss as subordinate
+ * boss's boss adds promotedEmployee to descendants
+ * boss's boss will point to employee
  *
  * @param {TreeNode} tree
  * @param {string} employeeName
@@ -159,8 +161,15 @@ export function fireEmployee(tree: TreeNode, name: string) {
 export function promoteEmployee(tree: TreeNode, employeeName: string) {
   const employee = getEmployee(tree, employeeName);
   const boss = getBoss(tree, employeeName);
+
+  boss.descendants.splice(
+    boss.descendants.findIndex((subordinate) => subordinate.value.name === employeeName),
+    1
+  );
+
   // DEEP COPY, by value and not by reference since we want ORIGINAL values
   const bossSubordinates = JSON.parse(JSON.stringify(boss.descendants));
+  employee.descendants = bossSubordinates;
 
   if (employee.descendants.length) {
     for (let subordinate of employee.descendants) {
@@ -169,11 +178,10 @@ export function promoteEmployee(tree: TreeNode, employeeName: string) {
     employee.descendants = [];
   }
 
-  boss.descendants.splice(
-    boss.descendants.findIndex((subordinate) => subordinate.value.name === employeeName),
-    1
-  );
-  employee.descendants = bossSubordinates;
+  const superBoss = getBoss(tree, boss.value.name);
+  const bossIndex = superBoss.descendants.findIndex((descendant) => descendant.value.name === boss.value.name);
+  superBoss.descendants[bossIndex] = employee;
+
   employee.descendants.push(boss);
   console.log(`Promoted ${employee.value.name} and made ${boss.value.name} their subordinate`);
 }
@@ -206,6 +214,11 @@ export function demoteEmployee(tree: TreeNode, employeeName: string, subordinate
     employee.descendants.findIndex((subordinate) => subordinate.value.name === subordinateName),
     1
   );
+
+  const superBoss = getBoss(tree, employee.value.name);
+  const bossIndex = superBoss.descendants.findIndex((descendant) => descendant.value.name === employee.value.name);
+  superBoss.descendants[bossIndex] = subordinate;
+
   subordinate.descendants = employeeSubordinates;
   subordinate.descendants.push(employee);
   console.log(`Demoted employee (demoted ${employee.value.name} and replaced with ${subordinate.value.name})`);

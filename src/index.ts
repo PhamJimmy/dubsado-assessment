@@ -1,5 +1,5 @@
 // Main code goes here
-import { getBoss, getSubordinates } from "./getEmployees";
+import { getBoss, getEmployee, getSubordinates } from "./getEmployees";
 import { generateNormalizedJSON, generateCompanyStructure, hireEmployee, fireEmployee, promoteEmployee, demoteEmployee } from "./manageEmployees";
 
 function main() {
