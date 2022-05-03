@@ -64,9 +64,42 @@ export function getSubordinates(tree: TreeNode, employeeName: string) {
  * Finds and returns the lowest-ranking employee and the tree node's depth index.
  * 
  * @param {TreeNode} tree
- * @param {string} employeeName
- * @returns {TreeNode}
+ * @returns {TreeNode: number} 
  */
-function findLowestEmployee() {
+export function findLowestEmployee(tree: TreeNode) {
+  const lowestEmployee = getLowestLeaf(tree);
+  const depth = getDepth(tree);
+  return { lowestEmployee, depth };
+}
 
+function getDepth(tree: TreeNode, count: number = 1): number {
+  return 1 + Math.max(0, ...tree.descendants.map((descendant) => getDepth(descendant)));
+}
+
+function getLowestLeaf(tree: TreeNode) {
+  if (!tree.descendants.length) return tree;
+  let queue = [...tree.descendants];
+  let lastLeaf: TreeNode = null;
+  while(queue.length){
+    if (queue[0].descendants.length) {
+      queue = [...queue, ...queue[0].descendants];
+    }
+    lastLeaf = queue.shift();
+  }
+  return lastLeaf;
+}
+
+export function getPathToLowestEmployee(tree: TreeNode) {
+  let path = [];
+  const lowestEmployee = getLowestLeaf(tree);
+  path.push(lowestEmployee.value.name);
+
+  let boss = getBoss(tree, path[0]);
+
+  while(boss) {
+    path.unshift(boss.value.name);
+    boss = getBoss(tree, path[0]);
+  }
+  
+  return path;
 }

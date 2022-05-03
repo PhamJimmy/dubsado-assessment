@@ -159,29 +159,24 @@ export function fireEmployee(tree: TreeNode, name: string) {
  * @returns {void}
  */
 export function promoteEmployee(tree: TreeNode, employeeName: string) {
-  const employee = getEmployee(tree, employeeName);
-  const boss = getBoss(tree, employeeName);
+  const employee: TreeNode = getEmployee(tree, employeeName);
+  const boss: TreeNode = getBoss(tree, employeeName);
 
   boss.descendants.splice(
     boss.descendants.findIndex((subordinate) => subordinate.value.name === employeeName),
     1
   );
 
-  // DEEP COPY, by value and not by reference since we want ORIGINAL values
+  // temporary DEEP COPY, by value and not by reference since we want ORIGINAL values
   const bossSubordinates = JSON.parse(JSON.stringify(boss.descendants));
+  const employeeSubordinates = JSON.parse(JSON.stringify(employee.descendants));
   employee.descendants = bossSubordinates;
+  boss.descendants = employeeSubordinates;
 
-  if (employee.descendants.length) {
-    for (let subordinate of employee.descendants) {
-      boss.descendants.push(subordinate);
-    }
-    employee.descendants = [];
-  }
 
   const superBoss = getBoss(tree, boss.value.name);
   const bossIndex = superBoss.descendants.findIndex((descendant) => descendant.value.name === boss.value.name);
   superBoss.descendants[bossIndex] = employee;
-
   employee.descendants.push(boss);
   console.log(`[promoteEmployee]: Promoted ${employee.value.name} and made ${boss.value.name} their subordinate`);
 }
@@ -200,20 +195,17 @@ export function promoteEmployee(tree: TreeNode, employeeName: string) {
 export function demoteEmployee(tree: TreeNode, employeeName: string, subordinateName: string) {
   const employee = getEmployee(tree, employeeName);
   const subordinate = getEmployee(tree, subordinateName);
-  // DEEP COPY, by value and not by reference since we want ORIGINAL values
-  const employeeSubordinates = JSON.parse(JSON.stringify(employee.descendants));
 
-  if (subordinate.descendants.length) {
-    for (let descendant of subordinate.descendants) {
-      employee.descendants.push(descendant);
-    }
-    subordinate.descendants = [];
-  }
-
-  employeeSubordinates.splice(
+  employee.descendants.splice(
     employee.descendants.findIndex((subordinate) => subordinate.value.name === subordinateName),
     1
   );
+
+  // DEEP COPY, by value and not by reference since we want ORIGINAL values
+  const employeeSubordinates = JSON.parse(JSON.stringify(employee.descendants));
+  const subordinateSubordinates = JSON.parse(JSON.stringify(subordinate.descendants));
+  employee.descendants = subordinateSubordinates;
+  subordinate.descendants = employeeSubordinates;
 
   const superBoss = getBoss(tree, employee.value.name);
   const bossIndex = superBoss.descendants.findIndex((descendant) => descendant.value.name === employee.value.name);
