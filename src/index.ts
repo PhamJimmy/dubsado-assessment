@@ -22,7 +22,6 @@ function main() {
 
   console.log("\n");
 
-  console.log(`[getBoss]: Nick's boss is ${getBoss(tree, "Nick").value.name}`);
   console.log(`[getBoss]: Bill's boss is ${getBoss(tree, "Bill").value.name}`);
   const subordinateNames = getSubordinates(tree, "Maria").map((subordinate) => subordinate.value.name);
   console.log(`[getSubordinate]: Maria's subordinates are ${subordinateNames.join(", ")}`)
